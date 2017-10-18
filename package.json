@@ -1,0 +1,27 @@
+{
+  "name": "additive-axis",
+  "version": "1.0.0",
+  "description": "Learning numbers addition with axis",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fargelus/additive-axis.git"
+  },
+  "author": "fargelus",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fargelus/additive-axis/issues"
+  },
+  "homepage": "https://github.com/fargelus/additive-axis#readme",
+  "devDependencies": {
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "gulp": "^3.9.1",
+    "gulp-connect": "^5.0.0",
+    "gulp-livereload": "^3.8.1"
+  }
+}
