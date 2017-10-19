@@ -1,26 +1,47 @@
 const gulp = require('gulp');
 const connect = require('gulp-connect');
 
-gulp.task('connect', function() {
+const buildPath = './build';
+
+gulp.task('connect', () => {
   connect.server({
-    root: '.',
-    livereload: true
+    root: buildPath,
+    livereload: true,
   });
 });
 
-gulp.task('html', function () {
-  gulp.src('index.html')
+gulp.task('reload', () => {
+  gulp.src(buildPath)
     .pipe(connect.reload());
 });
 
-gulp.task('js', function () {
-  gulp.src('main.js')
-  .pipe(connect.reload());
+gulp.task('html', () => {
+  gulp.src('./src/index.html')
+    .pipe(gulp.dest(buildPath));
 });
 
-gulp.task('watch', function () {
-  gulp.watch(['index.html'], ['html']);
-  gulp.watch(['main.js'], ['js']);
+gulp.task('css', () => {
+  gulp.src('./src/styles/*.css')
+    .pipe(gulp.dest(buildPath));
 });
 
-gulp.task('default', ['connect', 'watch']);
+gulp.task('js', () => {
+  gulp.src('./src/js/*.js')
+    .pipe(gulp.dest(buildPath));
+});
+
+gulp.task('copy', () => {
+  gulp.start('html');
+  gulp.start('css');
+  gulp.start('js');
+});
+
+gulp.task('watch', () => {
+  gulp.watch(['./src/index.html'], ['html']);
+  gulp.watch(['./src/styles/*.css'], ['css']);
+  gulp.watch(['./src/js/*.js'], ['js']);
+
+  gulp.watch(['./build'], ['reload']);
+});
+
+gulp.task('default', ['connect', 'copy', 'watch']);
