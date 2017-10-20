@@ -1,21 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Axs Additive</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Axis Additive</title>
+  <link rel="stylesheet" href="main.css">
 </head>
+
 <body>
-  <div class="example">
-    <output class="term">7</output>
-    <span class="sign">+</span>
-    <output class="term">4</output>
-    <span class="sign">=</span>
-    <output class="result">11</output>
+  <div class="game">
+
+    <div class="example">
+      <output class="term"></output>
+      <span class="sign">+</span>
+      <output class="term"></output>
+      <span class="sign">=</span>
+      <output class="result">?</output>
+    </div>
+
+    <svg class="svg" width="900" height="300">
+      <image id="js-axis" xlink:href="sprite.png"
+      class="axis" x="0" y="200"
+      height="83px" width="875px"/>
+
+      <path d="M35,220 C100,80 400,100 437,220" fill="transparent"
+      stroke="black" stroke-width="3"/>
+    </svg>
+
   </div>
 
-  <img src="sprite.png" alt="Numerical axis">
+  <script src='app.js'></script>
 </body>
+
 </html>

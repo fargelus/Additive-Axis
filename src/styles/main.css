@@ -1,3 +1,11 @@
+.game{
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: flex-start;
+}
+
 .example{
-  font: 30px / 1 'Arial', 'Helvetica' sans-serif;
+  font: 30px / 1 'Arial';
+  margin-top: 20px;
 }
