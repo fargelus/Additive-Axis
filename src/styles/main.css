@@ -9,3 +9,8 @@
   font: 30px / 1 'Arial';
   margin-top: 20px;
 }
+
+input[type="text"]{
+  width: 20px;
+  text-align: center;
+}
