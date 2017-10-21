@@ -20,27 +20,40 @@ class View {
     this.drawArc(arcBegin, arcLen);
 
     arcBegin = arcLen;
-    const inputOffsetX = arcBegin / 2;
     arcLen = arcBegin + distanceBetweenNumbers *
                    this.b;
-    this.drawArc(arcBegin, arcLen, inputOffsetX, 30);
+    this.drawArc(arcBegin, arcLen);
   }
 
-  drawArc(arcBegin, arcLen, inputOffsetX = 0, inputOffsetY = 0) {
-    const arc = `<path d="M${arcBegin},220 A25,15 0 0,1 ${arcLen},220"
-    fill="transparent"
-    stroke="black" stroke-width="3"
-    marker-end="url(#arrow-head)"/>`;
+  drawArc(arcBeginX, arcLen) {
+    // рисуем арку
+    const arcBeginY = 220;
+    const arc = `<path d="M${arcBeginX},${arcBeginY}
+                          A25,15 0 0,1 ${arcLen},${arcBeginY}"
+                       fill="transparent"
+                       stroke="black" stroke-width="3"
+                       marker-end="url(#arrow-head)"/>`;
     this.svg.insertAdjacentHTML('beforeend', arc);
 
-    const input = `<foreignObject x="${inputOffsetX + arcLen / 2}"
-                    y="${85 + inputOffsetY}" width="10" height="10">
+    // Получить высоту текущей дуги(только что отрисованной)
+    const childCount = this.svg.children.length;
+    const path = this.svg.children[childCount - 1];
+    const arcHeigt = path.getBoundingClientRect().height;
+
+    // расчет смещения input
+    const inputStartY = arcBeginY - arcHeigt - 30;
+
+    // рендер инпута
+    const input = `<foreignObject x="${(arcLen - arcBeginX) / 2
+                                        + arcBeginX - 10}"
+                    y="${inputStartY}" width="10" height="10">
                      <div xmlns="http://www.w3.org/1999/xhtml">
                        <input type="text"></input>
                      </div>
                    </foreignObject>`;
-
     this.svg.insertAdjacentHTML('beforeend', input);
+
+    // Вешаем обработчик события onchange на наш инпут
     const svgInputs = this.svg.getElementsByTagName('input');
     svgInputs[svgInputs.length - 1].onchange = this.validate;
   }
