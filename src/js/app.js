@@ -1,14 +1,17 @@
+const $ = require('jquery');
+
 class View {
   constructor() {
     this.a = View.getRandom(6, 9);
     this.res = View.getRandom(11, 14);
     this.b = this.res - this.a;
 
-    const terms = document.getElementsByClassName('term');
-    const [firstTerm, secondTerm] = terms;
+    this.terms = document.getElementsByClassName('term');
+    this.termIndex = 0;
+    this.summator = 0;
 
-    firstTerm.value = this.a;
-    secondTerm.value = this.b;
+    this.terms[0].value = this.a;
+    this.terms[1].value = this.b;
 
     [this.svg] = document.getElementsByClassName('svg');
 
@@ -23,6 +26,8 @@ class View {
     arcLen = arcBegin + distanceBetweenNumbers *
                    this.b;
     this.drawArc(arcBegin, arcLen);
+
+    this.hideArcsExceptFirst();
   }
 
   drawArc(arcBeginX, arcLen) {
@@ -30,7 +35,7 @@ class View {
     const arcBeginY = 220;
     const arc = `<path d="M${arcBeginX},${arcBeginY}
                           A25,15 0 0,1 ${arcLen},${arcBeginY}"
-                       fill="transparent"
+                       fill="transparent" class="arc"
                        stroke="black" stroke-width="3"
                        marker-end="url(#arrow-head)"/>`;
     this.svg.insertAdjacentHTML('beforeend', arc);
@@ -46,7 +51,8 @@ class View {
     // рендер инпута
     const input = `<foreignObject x="${(arcLen - arcBeginX) / 2
                                         + arcBeginX - 10}"
-                    y="${inputStartY}" width="10" height="10">
+                    y="${inputStartY}" width="10" height="10"
+                    class="inputObject">
                      <div xmlns="http://www.w3.org/1999/xhtml">
                        <input type="text"></input>
                      </div>
@@ -55,7 +61,9 @@ class View {
 
     // Вешаем обработчик события onchange на наш инпут
     const svgInputs = this.svg.getElementsByTagName('input');
-    svgInputs[svgInputs.length - 1].onchange = this.validate;
+    svgInputs[svgInputs.length - 1].onchange = (evt) => {
+      this.validate(evt.currentTarget);
+    };
   }
 
   static getRandom(min, max) {
@@ -64,7 +72,51 @@ class View {
     return rand;
   }
 
-  validate() {}
+  validate(inputObj) {
+    const inputValue = inputObj.value;
+    const currentTerm = this.terms[this.termIndex];
+
+    const inputObjRef = inputObj;
+    if (inputValue === currentTerm.value) {
+      this.summator += inputValue;
+      if (this.summator === this.res) {
+        console.log('Right');
+      } else {
+        inputObjRef.disabled = true;
+        this.showNextArc(inputObj);
+      }
+    } else {
+      inputObjRef.style.color = 'red';
+      currentTerm.style.backgroundColor = 'orange';
+    }
+  }
+
+  showNextArc(obj) {
+    const $inputs = $(this.svg).find('input');
+    let visibleInputIndex;
+    $inputs.each((index, elem) => {
+      if (elem === obj) visibleInputIndex = index;
+    });
+
+    // shadow elements
+    const arcs = this.svg.getElementsByClassName('arc');
+    const nextArc = arcs[visibleInputIndex + 1];
+    const inputObjects = this.svg.getElementsByClassName('inputObject');
+    const nextInput = inputObjects[visibleInputIndex + 1];
+
+    nextArc.style.display = 'block';
+    nextInput.style.display = 'block';
+  }
+
+  hideArcsExceptFirst() {
+    const childrens = this.svg.children;
+    const len = this.svg.childElementCount;
+
+    for (let i = 4; i < len; i += 1) {
+      const elem = childrens[i];
+      elem.style.display = 'none';
+    }
+  }
 }
 
 window.addEventListener('load', new View());
