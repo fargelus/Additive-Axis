@@ -2,16 +2,23 @@ const $ = require('jquery');
 
 class View {
   constructor() {
+    // получить два случайных числа
+    // рассчитать их сумму
     this.a = View.getRandom(6, 9);
     this.res = View.getRandom(11, 14);
     this.b = this.res - this.a;
 
+    // terms -- outputs для чисел в DOM
     this.terms = document.getElementsByClassName('term');
     this.termIndex = 0;
     this.summator = 0;
 
+    // Записываем случайные зн-я в DOM outputs
     this.terms[0].value = this.a;
     this.terms[1].value = this.b;
+
+    // Сохраним ссылку на результат
+    [this.resOutput] = document.getElementsByClassName('result');
 
     [this.svg] = document.getElementsByClassName('svg');
 
@@ -30,6 +37,13 @@ class View {
     this.hideArcsExceptFirst();
   }
 
+  /* Desc: Рисует дугу вместе с полем ввода
+     Input(arcBeginX -> Number, arcLen -> Number):
+         arcBeginX -- к-та начала дуги по оси абсцисс
+         arcLen -- длина дуги(конечная к-та по оси абсцисс)
+                   расчитывается при помощи зн-я текущего
+                   слагаемого
+     Output(undefined) */
   drawArc(arcBeginX, arcLen) {
     // рисуем арку
     const arcBeginY = 220;
@@ -66,23 +80,35 @@ class View {
     };
   }
 
+  /* Desc: Получить случайное число из диапазона [min, max]
+     Input(min -> Number, max -> Number)
+     Output(rand -> Number) */
   static getRandom(min, max) {
     let rand = min + Math.random() * (max + 1 - min);
     rand = Math.floor(rand);
     return rand;
   }
 
+  /* Desc: Обработчик события ввода слагаемых в соотвествующие
+           текстовые поля
+     Input(inputObj -> DOMNode):
+           inputObj -- Текстовое поле сгенерирующее событие
+     Output(undefined) */
   validate(inputObj) {
     const inputValue = inputObj.value;
     const currentTerm = this.terms[this.termIndex];
 
     const inputObjRef = inputObj;
     if (inputValue === currentTerm.value) {
-      this.summator += inputValue;
+      this.summator += (+inputValue);
+
+      View.transformInputToNumber(inputObjRef);
+
       if (this.summator === this.res) {
-        console.log('Right');
+        this.showResult();
       } else {
-        inputObjRef.disabled = true;
+        // проверка следующего слагаемого
+        this.termIndex += 1;
         this.showNextArc(inputObj);
       }
     } else {
@@ -91,6 +117,39 @@ class View {
     }
   }
 
+  /* Desc: Преобразование текстового поля в число
+     Input(input -> DOMNode):
+           input -- Текстовое поле с правильным ответом
+     Output(undefined) */
+  static transformInputToNumber(input) {
+    const inputRef = input;
+    inputRef.disabled = true;
+    inputRef.style.color = 'black';
+    inputRef.style.border = 'none';
+    inputRef.style.backgroundColor = 'transparent';
+  }
+
+  /* Desc: Замена знака вопроса текстовым полем для ввода
+     Input(undefined)
+     Output(undefined) */
+  showResult() {
+    this.resOutput.innerHTML = '<input type="text">';
+    const input = this.resOutput.getElementsByTagName('input')[0];
+    input.onchange = (evt) => {
+      const current = evt.currentTarget;
+      const val = current.value;
+      if (val - this.res === 0) {
+        View.transformInputToNumber(current);
+      } else {
+        current.style.color = 'red';
+      }
+    };
+  }
+
+  /* Desc: Показать следующую дугу вместе с полем для ввода
+     Input(obj -> DOMNode):
+           obj -- Текстовое поле с правильным ответом
+     Output(undefined) */
   showNextArc(obj) {
     const $inputs = $(this.svg).find('input');
     let visibleInputIndex;
@@ -108,6 +167,9 @@ class View {
     nextInput.style.display = 'block';
   }
 
+  /* Desc: Скрыть все поля/дуги кроме первой
+     Input(undefined)
+     Output(undefined) */
   hideArcsExceptFirst() {
     const childrens = this.svg.children;
     const len = this.svg.childElementCount;

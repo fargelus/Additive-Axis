@@ -14,3 +14,8 @@ input[type="text"]{
   width: 20px;
   text-align: center;
 }
+
+.result input[type="text"]{
+  width: 35px;
+  font: 30px / 1 'Arial';
+}
