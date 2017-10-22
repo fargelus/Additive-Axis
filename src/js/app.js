@@ -96,11 +96,15 @@ class View {
      Output(undefined) */
   validate(inputObj) {
     const inputValue = inputObj.value;
+    // текущее слагаемое
     const currentTerm = this.terms[this.termIndex];
 
     const inputObjRef = inputObj;
     if (inputValue === currentTerm.value) {
       this.summator += (+inputValue);
+
+      currentTerm.style.backgroundColor = 'transparent';
+      inputObjRef.style.fontSize = '20px';
 
       View.transformInputToNumber(inputObjRef);
 
@@ -112,6 +116,7 @@ class View {
         this.showNextArc(inputObj);
       }
     } else {
+      // информирование пол-ля об ошибке
       inputObjRef.style.color = 'red';
       currentTerm.style.backgroundColor = 'orange';
     }
@@ -150,11 +155,12 @@ class View {
      Input(obj -> DOMNode):
            obj -- Текстовое поле с правильным ответом
      Output(undefined) */
-  showNextArc(obj) {
+  showNextArc(inputObj) {
+    // находим индекс переданного инпута
     const $inputs = $(this.svg).find('input');
     let visibleInputIndex;
     $inputs.each((index, elem) => {
-      if (elem === obj) visibleInputIndex = index;
+      if (elem === inputObj) visibleInputIndex = index;
     });
 
     // shadow elements
@@ -171,13 +177,21 @@ class View {
      Input(undefined)
      Output(undefined) */
   hideArcsExceptFirst() {
-    const childrens = this.svg.children;
-    const len = this.svg.childElementCount;
+    const $arcs = $(this.svg).find('.arc');
+    $arcs.each((index, elem) => {
+      if (index > 0) {
+        const elemRef = elem;
+        elemRef.style.display = 'none';
+      }
+    });
 
-    for (let i = 4; i < len; i += 1) {
-      const elem = childrens[i];
-      elem.style.display = 'none';
-    }
+    const $inputs = $(this.svg).find('.inputObject');
+    $inputs.each((index, elem) => {
+      if (index > 0) {
+        const elemRef = elem;
+        elemRef.style.display = 'none';
+      }
+    });
   }
 }
 
