@@ -18,21 +18,24 @@
     - Если число введено правильно, инпут превращается в число
 
 ## Скрины
-1. Начальное состояние:
+1). Начальное состояние:
 ![](https://github.com/fargelus/Additive-Axis/blob/master/docs/initAxis.png)
 
-2. Ошибка ввода первого слагаемого:
+2). Ошибка ввода первого слагаемого:
 ![](https://github.com/fargelus/Additive-Axis/blob/master/docs/firstWrong.png)
 
-3. Ввод второго слагаемого:
+3). Ввод второго слагаемого:
 ![](https://github.com/fargelus/Additive-Axis/blob/master/docs/secondGuess.png)
 
-4. Опять ошибка:
+4). Опять ошибка:
 ![](https://github.com/fargelus/Additive-Axis/blob/master/docs/secondWrong.png)
 
-5. Ввод результата:
+5). Ввод результата:
 ![](https://github.com/fargelus/Additive-Axis/blob/master/docs/resGuess.png)
 
-6. Конечный результат примера:
+6). Конечный результат примера:
 ![](https://github.com/fargelus/Additive-Axis/blob/master/docs/finished.png)
 
+## Запуск
+     gulp
+ 
