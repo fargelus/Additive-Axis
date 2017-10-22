@@ -35,7 +35,3 @@
 
 6). Конечный результат примера:
 ![](https://github.com/fargelus/Additive-Axis/blob/master/docs/finished.png)
-
-## Запуск
-     gulp
- 
